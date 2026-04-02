@@ -12,10 +12,97 @@
     }
   }
 
+  const TALLERES_MAPA = [
+    {
+      nombre: "Sede Centro Cultural",
+      rubro: "Danza",
+      lat: -34.5224,
+      lng: -58.7167,
+      imagen: "Centro de danza.jpg",
+    },
+    {
+      nombre: "Taller Melodia Urbana",
+      rubro: "Musica",
+      lat: -34.531,
+      lng: -58.705,
+      imagen: "taller guitarra.jpeg",
+    },
+    {
+      nombre: "Taller de Ceramica Comunitario",
+      rubro: "Arte",
+      lat: -34.518,
+      lng: -58.721,
+      imagen: "Taller ceramica.jpeg",
+    },
+  ];
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function tallerTooltipHtml(t) {
+    const src = encodeURI("../../" + t.imagen);
+    return (
+      '<div class="map-tooltip-body">' +
+      '<img src="' +
+      src +
+      '" alt="" class="map-tooltip-img" width="140" height="88" loading="lazy" />' +
+      '<div class="map-tooltip-text"><strong>' +
+      escapeHtml(t.nombre) +
+      "</strong><br/><span>" +
+      escapeHtml(t.rubro) +
+      "</span></div></div>"
+    );
+  }
+
+  let mapTalleresInstance = null;
+
+  function refitMapTalleres() {
+    if (!mapTalleresInstance || !TALLERES_MAPA.length) return;
+    const pts = TALLERES_MAPA.map((t) => [t.lat, t.lng]);
+    mapTalleresInstance.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
+  }
+
+  function initMapTalleres() {
+    const el = document.getElementById("mapTalleres");
+    if (!el || typeof L === "undefined") return;
+
+    if (!mapTalleresInstance) {
+      mapTalleresInstance = L.map("mapTalleres", { scrollWheelZoom: true });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19,
+      }).addTo(mapTalleresInstance);
+
+      TALLERES_MAPA.forEach((t) => {
+        const marker = L.marker([t.lat, t.lng]).addTo(mapTalleresInstance);
+        marker.bindPopup(tallerTooltipHtml(t), { maxWidth: 280, className: "map-workshop-popup" });
+        marker.bindTooltip(tallerTooltipHtml(t), {
+          direction: "top",
+          offset: [0, -8],
+          opacity: 1,
+          sticky: true,
+          className: "map-workshop-tooltip",
+        });
+      });
+      refitMapTalleres();
+    } else {
+      mapTalleresInstance.invalidateSize();
+      refitMapTalleres();
+    }
+  }
+
   navLinks.forEach((btn) => {
     btn.addEventListener("click", () => {
       const targetId = btn.getAttribute("data-target");
       if (targetId) setActive(targetId);
+      if (targetId === "seccion-mapa") {
+        window.setTimeout(initMapTalleres, 120);
+      }
     });
   });
 
@@ -106,6 +193,12 @@
     const light = mode === "light";
     document.body.classList.toggle("light-mode", light);
     if (themeToggle) themeToggle.checked = light;
+    window.setTimeout(() => {
+      if (mapTalleresInstance) {
+        mapTalleresInstance.invalidateSize();
+        refitMapTalleres();
+      }
+    }, 80);
   }
 
   function getValue(id) {

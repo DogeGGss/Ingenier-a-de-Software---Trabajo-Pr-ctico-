@@ -521,6 +521,94 @@ body.light-mode .theme-icon {
   grid-column: 1 / -1;
 }
 
+.map-leaflet-card {
+  margin-top: 18px;
+}
+
+.map-leaflet-header {
+  margin-bottom: 8px;
+}
+
+.map-leaflet-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.map-leaflet-intro {
+  margin-top: 0;
+  font-size: 13px;
+}
+
+.map-leaflet-intro code {
+  font-size: 12px;
+}
+
+.leaflet-map {
+  width: 100%;
+  min-height: 480px;
+  height: min(68vh, 720px);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  z-index: 0;
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: var(--surface-2);
+}
+
+.leaflet-tooltip.map-workshop-tooltip {
+  background: rgba(17, 24, 39, 0.96);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+  padding: 10px 12px;
+  margin: 0;
+}
+
+.leaflet-tooltip.map-workshop-tooltip.leaflet-tooltip-top::before {
+  border-top-color: rgba(17, 24, 39, 0.96);
+}
+
+body.light-mode .leaflet-tooltip.map-workshop-tooltip {
+  background: rgba(255, 255, 255, 0.98);
+  color: #111827;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: var(--shadow);
+}
+
+body.light-mode .leaflet-tooltip.map-workshop-tooltip.leaflet-tooltip-top::before {
+  border-top-color: rgba(255, 255, 255, 0.98);
+}
+
+.map-tooltip-body {
+  max-width: 148px;
+}
+
+.map-tooltip-img {
+  width: 140px;
+  height: 88px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.map-tooltip-text {
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.leaflet-popup-content .map-tooltip-img {
+  margin-bottom: 8px;
+}
+
 .is-hidden {
   display: none !important;
 }

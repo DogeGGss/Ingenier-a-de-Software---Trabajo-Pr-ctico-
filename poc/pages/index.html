@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal de Talleres - Prototipo</title>
     <link rel="stylesheet" href="../css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
   </head>
   <body>
     <div class="app">
@@ -175,6 +181,19 @@
                 <div class="card-text">Envio mensual, estado, errores y reintentos.</div>
               </div>
             </div>
+
+            <div class="card card-wide map-leaflet-card">
+              <div class="map-leaflet-header">
+                <h3 class="map-leaflet-title">Talleres en el mapa</h3>
+                <div class="section-sub">Leaflet + capa OpenStreetMap (POC)</div>
+              </div>
+              <p class="card-text map-leaflet-intro">
+                Datos de ejemplo con coordenadas fijas. La camara se ajusta sola para mostrar
+                todos los marcadores (<code>fitBounds</code>). Para ubicar por direccion haria
+                falta un servicio de geocodificacion (no incluido en este prototipo).
+              </p>
+              <div id="mapTalleres" class="leaflet-map" aria-label="Mapa de talleres"></div>
+            </div>
           </section>
 
           <section class="content-section" id="seccion-acciones">
@@ -292,6 +311,11 @@
       </footer>
     </div>
 
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
     <script src="../js/main.js"></script>
   </body>
 </html>
