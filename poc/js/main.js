@@ -1,4 +1,16 @@
 (function () {
+
+  document.getElementById("fImagen").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      let output = document.getElementById("previewImagen");
+      output.src = reader.result;
+      output.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  });
+
   const navLinks = Array.from(document.querySelectorAll(".nav-link"));
   const sections = Array.from(document.querySelectorAll(".content-section"));
 
@@ -856,5 +868,8 @@
   bindWorkshopListInteraction();
   bindWorkshopSearch();
   reset();
+
+
+
 })();
 
