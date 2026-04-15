@@ -899,6 +899,13 @@ body.light-mode .tag {
   outline: none;
 }
 
+.preview-image{
+  display:none; 
+  max-width: 300px; 
+  max-height: 300px;
+  margin-top: 10px;
+}
+
 .field-control:focus {
   border-color: rgba(96, 165, 250, 0.6);
 }
