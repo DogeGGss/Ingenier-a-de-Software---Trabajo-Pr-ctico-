@@ -142,9 +142,16 @@
   }
 
   function getFilteredWorkshopIndices() {
+    const visible = WS.map((w, i) =>
+      isWorkshopVisibleForCurrentUser(w) ? i : null,
+    ).filter((x) => x != null);
     const q = workshopSearchQuery.trim();
-    if (!q) return WS.map((_, i) => i);
-    return WS.map((w, i) => (workshopMatchesQuery(w, q) ? i : null)).filter((x) => x != null);
+    if (!q) return visible;
+    return visible.filter((i) => workshopMatchesQuery(WS[i], q));
+  }
+
+  function isWorkshopVisibleForCurrentUser(workshop) {
+    return workshop.estado !== "Pendiente";
   }
 
   function truncateText(str, n) {
@@ -424,106 +431,25 @@
     const countEl = document.getElementById("workshopCount");
     if (!ul) return;
     const indices = getFilteredWorkshopIndices();
+    const visibleTotal = WS.filter((w) => isWorkshopVisibleForCurrentUser(w)).length;
     const q = workshopSearchQuery.trim();
     if (countEl) {
       countEl.textContent = q
-        ? indices.length + " de " + WS.length + " resultados"
-        : WS.length + " resultados";
+        ? indices.length + " de " + visibleTotal + " resultados"
+        : visibleTotal + " resultados";
     }
     if (selectedWorkshopIndex != null && !indices.includes(selectedWorkshopIndex)) {
       clearWorkshopSelection();
     }
-    const showEstado = currentUser === "admin";
     ul.innerHTML = indices
-      .map((i) => {
-        const w = WS[i];
-        const src = encodeURI("../../" + w.imagen);
-        const tagClass = w.estado === "Pendiente" ? "tag-warn" : "tag-ok";
-        const estadoLabel = w.estado === "Pendiente" ? "Pendiente" : "Aprobado";
-        const estadoTag = showEstado
-          ? '<span class="tag ' + tagClass + '">' + estadoLabel + "</span>"
-          : "";
-        const sub =
-          truncateText(w.descripcion, 110) || truncateText(w.actividades, 110);
-        const subHtml = sub
-          ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
-          : "";
-        const encargado =
-          w.colaboradorNombre != null && String(w.colaboradorNombre).trim() !== ""
-            ? escapeHtml(w.colaboradorNombre)
-            : "A confirmar";
-        const telefono =
-          w.telefono != null && String(w.telefono).trim() !== ""
-            ? escapeHtml(w.telefono)
-            : "Sin telefono publicado";
-        const correo =
-          w.correo != null && String(w.correo).trim() !== ""
-            ? escapeHtml(w.correo)
-            : "Sin correo publicado";
-        const direccion =
-          w.direccion != null && String(w.direccion).trim() !== ""
-            ? escapeHtml(w.direccion)
-            : "A confirmar";
-        const horarios =
-          w.horarios != null && String(w.horarios).trim() !== ""
-            ? escapeHtml(w.horarios)
-            : "A confirmar";
-        const ubicacionLabel =
-          w.ubicacion === "centro"
-            ? "En centro cultural / espacio municipal"
-            : "Taller en espacio propio";
-        const redes =
-          w.redes != null && String(w.redes).trim() !== ""
-            ? escapeHtml(w.redes)
-            : "Sin redes publicadas";
-        return (
-          "<li class=\"workshop-item\" data-workshop-index=\"" +
-          i +
-          "\" role=\"button\" tabindex=\"0\">" +
-          '<div class="workshop-item__visual" aria-hidden="true">' +
-          '<img class="workshop-item__thumb" src="' +
-          src +
-          '" alt="" loading="lazy" decoding="async"/>' +
-          "</div>" +
-          "<div class=\"workshop-item__body\">" +
-          "<div class=\"workshop-item__title\">" +
-          escapeHtml(w.nombre) +
-          "</div>" +
-          subHtml +
-          "<div class=\"workshop-item__meta\">" +
-          '<span class="tag tag-rubro">' +
-          escapeHtml(w.rubro) +
-          "</span>" +
-          '<span class="tag tag-zona">' +
-          escapeHtml(w.zona) +
-          "</span>" +
-          estadoTag +
-          "</div>" +
-          '<div class="workshop-item__details" aria-hidden="true">' +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Encargado:</span><span class="workshop-detail-value">' +
-          encargado +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Telefono:</span><span class="workshop-detail-value">' +
-          telefono +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Correo:</span><span class="workshop-detail-value">' +
-          correo +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Ubicacion:</span><span class="workshop-detail-value">' +
-          escapeHtml(ubicacionLabel) +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Direccion:</span><span class="workshop-detail-value">' +
-          direccion +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Horarios:</span><span class="workshop-detail-value">' +
-          horarios +
-          "</span></div>" +
-          '<div class="workshop-detail-row"><span class="workshop-detail-label">Contacto / redes:</span><span class="workshop-detail-value">' +
-          redes +
-          "</span></div>" +
-          "</div></div></li>"
-        );
-      })
+      .map((i) =>
+        buildWorkshopItemHtml(WS[i], {
+          index: i,
+          showEstado: false,
+          isSelected: false,
+          wrapperTag: "li",
+        }),
+      )
       .join("");
 
     if (selectedWorkshopIndex != null && selectedWorkshopIndex < WS.length) {
@@ -531,6 +457,117 @@
       if (li) li.classList.add("is-selected");
     }
     updateWorkshopMapFilter();
+  }
+
+  function buildWorkshopItemHtml(w, options) {
+    const opts = options || {};
+    const src = opts.imageSrc || encodeURI("../../" + w.imagen);
+    const tagClass = w.estado === "Pendiente" ? "tag-warn" : "tag-ok";
+    const estadoLabel = w.estado === "Pendiente" ? "Pendiente" : "Aprobado";
+    const estadoTag = opts.showEstado
+      ? '<span class="tag ' + tagClass + '">' + estadoLabel + "</span>"
+      : "";
+    const sub =
+      truncateText(w.descripcion, 110) || truncateText(w.actividades, 110);
+    const subHtml = sub
+      ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
+      : "";
+    const encargado =
+      w.colaboradorNombre != null && String(w.colaboradorNombre).trim() !== ""
+        ? escapeHtml(w.colaboradorNombre)
+        : "A confirmar";
+    const telefono =
+      w.telefono != null && String(w.telefono).trim() !== ""
+        ? escapeHtml(w.telefono)
+        : "Sin telefono publicado";
+    const correo =
+      w.correo != null && String(w.correo).trim() !== ""
+        ? escapeHtml(w.correo)
+        : "Sin correo publicado";
+    const direccion =
+      w.direccion != null && String(w.direccion).trim() !== ""
+        ? escapeHtml(w.direccion)
+        : "A confirmar";
+    const horarios =
+      w.horarios != null && String(w.horarios).trim() !== ""
+        ? escapeHtml(w.horarios)
+        : "A confirmar";
+    const ubicacionLabel =
+      w.ubicacion === "centro"
+        ? "En centro cultural / espacio municipal"
+        : "Taller en espacio propio";
+    const redes =
+      w.redes != null && String(w.redes).trim() !== ""
+        ? escapeHtml(w.redes)
+        : "Sin redes publicadas";
+    const zona =
+      w.zona != null && String(w.zona).trim() !== ""
+        ? escapeHtml(w.zona)
+        : "Zona a confirmar";
+    const itemClasses = ["workshop-item"];
+    if (opts.isSelected) itemClasses.push("is-selected");
+    const wrapperTag = opts.wrapperTag === "div" ? "div" : "li";
+    const attrs = [];
+
+    if (wrapperTag === "li") {
+      attrs.push('data-workshop-index="' + opts.index + '"');
+      attrs.push('role="button"');
+      attrs.push('tabindex="0"');
+    }
+
+    return (
+      "<" +
+      wrapperTag +
+      ' class="' +
+      itemClasses.join(" ") +
+      '"' +
+      (attrs.length ? " " + attrs.join(" ") : "") +
+      ">" +
+      '<div class="workshop-item__visual" aria-hidden="true">' +
+      '<img class="workshop-item__thumb" src="' +
+      src +
+      '" alt="" loading="lazy" decoding="async"/>' +
+      "</div>" +
+      '<div class="workshop-item__body">' +
+      '<div class="workshop-item__title">' +
+      escapeHtml(w.nombre) +
+      "</div>" +
+      subHtml +
+      '<div class="workshop-item__meta">' +
+      '<span class="tag tag-rubro">' +
+      escapeHtml(w.rubro) +
+      "</span>" +
+      '<span class="tag tag-zona">' +
+      zona +
+      "</span>" +
+      estadoTag +
+      "</div>" +
+      '<div class="workshop-item__details" aria-hidden="true">' +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Encargado:</span><span class="workshop-detail-value">' +
+      encargado +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Telefono:</span><span class="workshop-detail-value">' +
+      telefono +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Correo:</span><span class="workshop-detail-value">' +
+      correo +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Ubicacion:</span><span class="workshop-detail-value">' +
+      escapeHtml(ubicacionLabel) +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Direccion:</span><span class="workshop-detail-value">' +
+      direccion +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Horarios:</span><span class="workshop-detail-value">' +
+      horarios +
+      "</span></div>" +
+      '<div class="workshop-detail-row"><span class="workshop-detail-label">Contacto / redes:</span><span class="workshop-detail-value">' +
+      redes +
+      "</span></div>" +
+      "</div></div></" +
+      wrapperTag +
+      ">"
+    );
   }
 
   function bindWorkshopListInteraction() {
@@ -583,30 +620,19 @@
 
   function updateWorkshopMapFilter() {
     if (!workshopMarkers.length) return;
-    const q = workshopSearchQuery.trim();
     const set = new Set(getFilteredWorkshopIndices());
     workshopMarkers.forEach((marker, i) => {
       if (!marker) return;
-      if (!q) {
-        marker.setOpacity(1);
-        return;
-      }
-      marker.setOpacity(set.has(i) ? 1 : 0.2);
+      marker.setOpacity(set.has(i) ? 1 : 0);
     });
     refitMapTalleres();
   }
 
   function refitMapTalleres() {
     if (!mapTalleresInstance || !WS.length) return;
-    const q = workshopSearchQuery.trim();
-    const ix = getFilteredWorkshopIndices();
-    let useIx;
-    if (!q) {
-      useIx = WS.map((_, i) => i);
-    } else if (ix.length === 0) {
+    const useIx = getFilteredWorkshopIndices();
+    if (useIx.length === 0) {
       return;
-    } else {
-      useIx = ix;
     }
     const pts = useIx.map((i) => [WS[i].lat, WS[i].lng]);
     mapTalleresInstance.fitBounds(pts, { padding: [48, 48], maxZoom: 15 });
@@ -1043,79 +1069,12 @@
       workshopRegisterImageData ||
       "../../img-talleres/" + thumbFileForRubro(w.rubro);
     const srcHtml = workshopRegisterImageData ? imgSrc : encodeURI(imgSrc);
-    const sub =
-      truncateText(w.descripcion, 110) || truncateText(w.actividades, 110);
-    const subHtml = sub
-      ? '<div class="workshop-item__subtitle">' + escapeHtml(sub) + "</div>"
-      : "";
-    const encargado =
-      w.colaboradorNombre != null && String(w.colaboradorNombre).trim() !== ""
-        ? escapeHtml(w.colaboradorNombre)
-        : "A confirmar";
-    const telefono =
-      w.telefono != null && String(w.telefono).trim() !== ""
-        ? escapeHtml(w.telefono)
-        : "Sin telefono publicado";
-    const correo =
-      w.correo != null && String(w.correo).trim() !== ""
-        ? escapeHtml(w.correo)
-        : "Sin correo publicado";
-    const direccion =
-      w.direccion != null && String(w.direccion).trim() !== ""
-        ? escapeHtml(w.direccion)
-        : "A confirmar";
-    const horarios =
-      w.horarios != null && String(w.horarios).trim() !== ""
-        ? escapeHtml(w.horarios)
-        : "A confirmar";
-    const ubicacionLabel =
-      w.ubicacion === "centro"
-        ? "En centro cultural / espacio municipal"
-        : "Taller en espacio propio";
-    const redes =
-      w.redes != null && String(w.redes).trim() !== ""
-        ? escapeHtml(w.redes)
-        : "Sin redes publicadas";
-    workshopPreviewCard.innerHTML =
-      '<div class="workshop-item is-selected workshop-item--preview">' +
-      '<div class="workshop-item__visual" aria-hidden="true">' +
-      '<img class="workshop-item__thumb" src="' +
-      srcHtml +
-      '" alt="" loading="lazy" decoding="async"/>' +
-      "</div>" +
-      '<div class="workshop-item__body">' +
-      '<div class="workshop-item__title">' +
-      escapeHtml(w.nombre) +
-      "</div>" +
-      subHtml +
-      '<div class="workshop-item__meta">' +
-      '<span class="tag tag-rubro">' +
-      escapeHtml(w.rubro) +
-      "</span>" +
-      "</div>" +
-      '<div class="workshop-item__details">' +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Encargado:</span><span class="workshop-detail-value">' +
-      encargado +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Telefono:</span><span class="workshop-detail-value">' +
-      telefono +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Correo:</span><span class="workshop-detail-value">' +
-      correo +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Ubicacion:</span><span class="workshop-detail-value">' +
-      escapeHtml(ubicacionLabel) +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Direccion:</span><span class="workshop-detail-value">' +
-      direccion +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Horarios:</span><span class="workshop-detail-value">' +
-      horarios +
-      "</span></div>" +
-      '<div class="workshop-detail-row"><span class="workshop-detail-label">Contacto / redes:</span><span class="workshop-detail-value">' +
-      redes +
-      "</span></div>" +
-      "</div></div></div>";
+    workshopPreviewCard.innerHTML = buildWorkshopItemHtml(w, {
+      imageSrc: srcHtml,
+      isSelected: true,
+      showEstado: false,
+      wrapperTag: "div",
+    });
   }
 
   function renderPendingRequests() {

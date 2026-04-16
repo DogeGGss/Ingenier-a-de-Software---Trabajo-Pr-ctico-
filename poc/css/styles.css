@@ -524,6 +524,7 @@ body.light-mode .theme-icon {
 
 .workshop-item.is-selected {
   --workshop-card-h: 376px;
+  height: var(--workshop-card-h);
   border-color: rgba(96, 165, 250, 0.6);
   background: rgba(15, 23, 42, 0.55);
   box-shadow:
@@ -571,6 +572,10 @@ body.light-mode .workshop-item:hover {
   min-height: var(--workshop-card-h);
   overflow: hidden;
   isolation: isolate;
+}
+
+.workshop-item.is-selected .workshop-item__visual {
+  height: var(--workshop-card-h);
 }
 
 /* Viñeta suave: enmascara bordes duros y JPEG blocky en fotos chicas */
@@ -828,28 +833,15 @@ body.light-mode .workshop-item__details {
   transform: translateY(0);
 }
 
-/* Vista previa del formulario: proporciones mas apaisadas */
-.workshop-item.workshop-item--preview {
-  --workshop-card-h: 220px;
-}
-
-.workshop-item.workshop-item--preview .workshop-item__details {
-  max-height: 220px;
-}
-
-.workshop-item.workshop-item--preview .workshop-item__visual {
-  min-height: var(--workshop-card-h);
-  height: var(--workshop-card-h);
-}
-
 .workshop-preview-shell {
   display: flex;
   justify-content: center;
+  width: min(100%, calc((100vw - 86px) / 2));
+  margin-inline: auto;
 }
 
-.workshop-preview-shell .workshop-item.workshop-item--preview {
+.workshop-preview-shell .workshop-item {
   width: 100%;
-  max-width: 920px;
 }
 
 .workshop-detail-row {
@@ -1876,6 +1868,10 @@ body.light-mode .leaflet-popup.map-workshop-popup .leaflet-popup-tip {
   .home-split {
     grid-template-columns: 1fr;
     min-height: 0;
+  }
+
+  .workshop-preview-shell {
+    width: 100%;
   }
 
   .home-split__list {
