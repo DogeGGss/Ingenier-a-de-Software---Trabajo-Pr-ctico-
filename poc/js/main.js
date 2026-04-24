@@ -21,16 +21,7 @@
     return "Taller ceramica.jpeg";
   }
 
-  const ZONA_CENTRO = {
-    Malvinas: { lat: -34.535, lng: -58.708 },
-    "Los Polvorines": { lat: -34.528, lng: -58.704 },
-    "Grand Bourg": { lat: -34.486, lng: -58.725 },
-    "Pablo Podesta": { lat: -34.5798, lng: -58.6097 },
-    "Jose C. Paz": { lat: -34.516, lng: -58.768 },
-    "San Miguel": { lat: -34.543, lng: -58.712 },
-    "Del Viso": { lat: -34.451, lng: -58.802 },
-    Tortuguitas: { lat: -34.494, lng: -58.763 },
-  };
+  const ZONA_CENTRO = window.ZONA_CENTRO || {};
   const ZONA_DEFAULT = { lat: -34.52, lng: -58.72 };
   const goldenAngle = Math.PI * (3 - Math.sqrt(5));
   const porZona = {};
@@ -49,31 +40,7 @@
 
   let workshopSearchQuery = "";
 
-  const RUBRO_BUSQUEDA = {
-    Musica:
-      "musica musical instrumentos canto guitarra electrica acustica violin ukelele ukulele bateria percusion ensamble banda sonido",
-    Danza: "danza baile movimiento coreografia salsa bachata tango zumba folclore",
-    Arte: "arte pintura dibujo ceramica oleo plastico color creatividad",
-    Fotografia: "fotografia foto camara imagen retrato calle digital",
-    Teatro: "teatro actuacion escena dramaturgia obra voz",
-    Tecnologia: "tecnologia informatica computadora internet web programacion digital",
-    Bienestar: "bienestar yoga relajacion risoterapia mindfulness salud emocional",
-    Gastronomia: "gastronomia comida cocina panaderia horno restaurante recetas alimentos desayuno",
-    Inclusion: "inclusion lsa senas sordos accesibilidad comunicacion",
-    Literatura: "literatura lectura cuento poesia libro escritura",
-    Ecologia: "ecologia jardin huerta plantas compost medio ambiente",
-    Manualidades: "manualidades bordado origami papel textil hilo",
-    Educacion: "educacion escuela apoyo estudio matematica secundaria",
-    Diseno: "diseno serigrafia estampado grafico remera",
-    Juegos: "juegos ajedrez estrategia torneo",
-    Ciencia: "ciencia quimica experimento laboratorio",
-    Deporte: "deporte karate artes marciales gimnasio",
-    Salud: "salud nutricion cocina saludable primeros auxilios rcp emergencia medicina comunitaria",
-    Historia: "historia memoria archivo barrio patrimonio",
-    Artesania: "artesania cuero marroquineria craft",
-    Textil: "textil costura confeccion modista ropa",
-    Oficios: "oficios electricidad casa taller trabajo",
-  };
+  const RUBRO_BUSQUEDA = window.RUBRO_BUSQUEDA || [];
 
   const STOP_TOKENS = new Set([
     "de",

@@ -20,9 +20,46 @@
     };
   }
 
+  window.ZONA_CENTRO = {
+    Malvinas: { lat: -34.535, lng: -58.708 },
+    "Los Polvorines": { lat: -34.528, lng: -58.704 },
+    "Grand Bourg": { lat: -34.486, lng: -58.725 },
+    "Pablo Podesta": { lat: -34.5798, lng: -58.6097 },
+    "Jose C. Paz": { lat: -34.516, lng: -58.768 },
+    "San Miguel": { lat: -34.543, lng: -58.712 },
+    "Del Viso": { lat: -34.451, lng: -58.802 },
+    Tortuguitas: { lat: -34.494, lng: -58.763 },
+  };
+
+  window.RUBRO_BUSQUEDA = {
+    Musica:
+      "musica musical instrumentos canto guitarra electrica acustica violin ukelele ukulele bateria percusion ensamble banda sonido",
+    Danza: "danza baile movimiento coreografia salsa bachata tango zumba folclore",
+    Arte: "arte pintura dibujo ceramica oleo plastico color creatividad",
+    Fotografia: "fotografia foto camara imagen retrato calle digital",
+    Teatro: "teatro actuacion escena dramaturgia obra voz",
+    Tecnologia: "tecnologia informatica computadora internet web programacion digital",
+    Bienestar: "bienestar yoga relajacion risoterapia mindfulness salud emocional",
+    Gastronomia: "gastronomia comida cocina panaderia horno restaurante recetas alimentos desayuno",
+    Inclusion: "inclusion lsa senas sordos accesibilidad comunicacion",
+    Literatura: "literatura lectura cuento poesia libro escritura",
+    Ecologia: "ecologia jardin huerta plantas compost medio ambiente",
+    Manualidades: "manualidades bordado origami papel textil hilo",
+    Educacion: "educacion escuela apoyo estudio matematica secundaria",
+    Diseno: "diseno serigrafia estampado grafico remera",
+    Juegos: "juegos ajedrez estrategia torneo",
+    Ciencia: "ciencia quimica experimento laboratorio",
+    Deporte: "deporte karate artes marciales gimnasio",
+    Salud: "salud nutricion cocina saludable primeros auxilios rcp emergencia medicina comunitaria",
+    Historia: "historia memoria archivo barrio patrimonio",
+    Artesania: "artesania cuero marroquineria craft",
+    Textil: "textil costura confeccion modista ropa",
+    Oficios: "oficios electricidad casa taller trabajo",
+  };
+
   window.WORKSHOP_CATALOG = [
     row({
-      nombre: "Taller Melodia Urbana",
+      nombre: "Melodia Contigo",
       rubro: "Musica",
       zona: "Malvinas",
       estado: "Aprobado",
@@ -31,7 +68,7 @@
       correo: "laura.melodia@demo.portal",
       descripcion: "Espacio comunitario para aprender musica popular en grupo, sin necesidad de experiencia previa.",
       actividades: "Guitarra acustica y electrica, canto grupal, ensamble y arreglos sencillos.",
-      redes: "@melodiaurbana",
+      redes: "@melodiacontigo",
       ubicacion: "propia",
       direccion: "Av. de Mayo 1450, Malvinas",
       horarios: "Lun a Vie 18:00 a 21:00",
@@ -39,7 +76,7 @@
       imagen: "img-talleres/taller guitarra.jpeg",
     }),
     row({
-      nombre: "Centro de danza comunitaria",
+      nombre: "Danza en el barrio",
       rubro: "Danza",
       zona: "Los Polvorines",
       estado: "Aprobado",
@@ -56,7 +93,7 @@
       imagen: "img-talleres/Centro de danza.jpg",
     }),
     row({
-      nombre: "Taller de ceramica El Horno",
+      nombre: "El Horno de ceramica",
       rubro: "Arte",
       zona: "Grand Bourg",
       estado: "Aprobado",
@@ -107,7 +144,7 @@
       imagen: "img-talleres/teatro2.jpg",
     }),
     row({
-      nombre: "Informatica para adultos mayores",
+      nombre: "Digital para mayores",
       rubro: "Tecnologia",
       zona: "San Miguel",
       estado: "Aprobado",
@@ -124,7 +161,7 @@
       imagen: "img-talleres/informatica.jpg",
     }),
     row({
-      nombre: "Yoga matutino en el parque",
+      nombre: "Aire libre con yoga",
       rubro: "Bienestar",
       zona: "Del Viso",
       estado: "Aprobado",
@@ -175,7 +212,7 @@
       imagen: "img-talleres/senas.jpg",
     }),
     row({
-      nombre: "Escritura creativa",
+      nombre: "Creatividad Literaria",
       rubro: "Literatura",
       zona: "Los Polvorines",
       estado: "Aprobado",
@@ -192,7 +229,7 @@
       imagen: "img-talleres/escritura creativa.jpg",
     }),
     row({
-      nombre: "Jardineria y huerta urbana",
+      nombre: "Huerta y jardineria urbana",
       rubro: "Ecologia",
       zona: "Grand Bourg",
       estado: "Aprobado",
@@ -226,7 +263,7 @@
       imagen: "img-talleres/images.jpg",
     }),
     row({
-      nombre: "Repaso de matematica secundaria",
+      nombre: "La matematica es divertida siempre (secundaria)",
       rubro: "Educacion",
       zona: "Jose C. Paz",
       estado: "Pendiente",
@@ -260,7 +297,7 @@
       imagen: "img-talleres/serigrafia.png",
     }),
     row({
-      nombre: "Ajedrez para principiantes",
+      nombre: "Ajedrez para todos",
       rubro: "Juegos",
       zona: "Del Viso",
       estado: "Aprobado",
@@ -294,7 +331,7 @@
       imagen: "img-talleres/violin.jpg",
     }),
     row({
-      nombre: "Nutricion y taller de cocina saludable",
+      nombre: "Come bien, vive mejor",
       rubro: "Salud",
       zona: "Malvinas",
       estado: "Aprobado",
@@ -311,7 +348,7 @@
       imagen: "img-talleres/cocina saludable.jpg",
     }),
     row({
-      nombre: "Origami y papel reciclado",
+      nombre: "Arma un mundo de papel",
       rubro: "Manualidades",
       zona: "Los Polvorines",
       estado: "Pendiente",
@@ -328,7 +365,7 @@
       imagen: "img-talleres/origami.jpg",
     }),
     row({
-      nombre: "Historia local del partido",
+      nombre: "La historia de la pelota",
       rubro: "Historia",
       zona: "Grand Bourg",
       estado: "Aprobado",
@@ -345,7 +382,7 @@
       imagen: "img-talleres/partido-1.webp",
     }),
     row({
-      nombre: "Guitarra electrica nivel 1",
+      nombre: "Electricidad en tus manos",
       rubro: "Musica",
       zona: "Pablo Podesta",
       estado: "Aprobado",
@@ -396,7 +433,7 @@
       imagen: "img-talleres/quimica.jpg",
     }),
     row({
-      nombre: "Karate infantil",
+      nombre: "Karate kid",
       rubro: "Deporte",
       zona: "Del Viso",
       estado: "Aprobado",
@@ -447,7 +484,7 @@
       imagen: "img-talleres/emprendedores.webp",
     }),
     row({
-      nombre: "Expresion plastica ninos",
+      nombre: "Expresion plastica",
       rubro: "Arte",
       zona: "Los Polvorines",
       estado: "Aprobado",
@@ -515,7 +552,7 @@
       imagen: "img-talleres/salsa.png",
     }),
     row({
-      nombre: "Corte y confeccion nivel inicial",
+      nombre: "Corte y confeccion para todos",
       rubro: "Textil",
       zona: "San Miguel",
       estado: "Aprobado",
@@ -583,7 +620,7 @@
       imagen: "img-talleres/First aid y RCP.jpg",
     }),
     row({
-      nombre: "Dibujo anatomico",
+      nombre: "Dibujo el cuerpo humano",
       rubro: "Arte",
       zona: "Los Polvorines",
       estado: "Aprobado",
@@ -600,7 +637,7 @@
       imagen: "img-talleres/anatomico.webp",
     }),
     row({
-      nombre: "Lectura y club de cuentos",
+      nombre: "Club de cuentos",
       rubro: "Literatura",
       zona: "Grand Bourg",
       estado: "Aprobado",
